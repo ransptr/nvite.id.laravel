@@ -1,3 +1,155 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    --font-display: "Playfair Display", sans-serif;
+    --font-copy: "Instrument Sans", sans-serif;
+    --font-didot: "Didot", serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: #050505;
+  }
+
+  html:has(.landing-page) {
+    background: #fdfaf6;
+  }
+
+  body {
+    @apply overflow-x-hidden bg-[#050505] text-[#f6f0ea] antialiased;
+    font-family: var(--font-copy);
+  }
+
+  body:has(.landing-page) {
+    @apply bg-[#fdfaf6] text-[#1a1410];
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-copy {
+    font-family: var(--font-copy);
+  }
+
+  .invitation-input {
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.03);
+    color: #f6f0ea;
+    padding: 0.95rem 1rem;
+    outline: none;
+    transition:
+      border-color 180ms ease,
+      background 180ms ease,
+      transform 180ms ease;
+  }
+
+  .invitation-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .invitation-input:focus {
+    border-color: rgba(216, 177, 129, 0.85);
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .marquee-shell {
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .marquee-track {
+    display: inline-flex;
+    min-width: max-content;
+    animation: invitation-marquee 22s linear infinite;
+  }
+
+  .marquee-item {
+    padding-right: 0;
+    font-family: var(--font-didot);
+    font-size: clamp(4rem, 10vw, 10rem);
+    font-style: italic;
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+  }
+
+  .hero-marquee .marquee-item {
+    padding-right: 0;
+    font-family: var(--font-didot);
+    font-size: clamp(4.2rem, 9.2vw, 8.2rem);
+    font-style: italic;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+  }
+}
+
+@keyframes invitation-marquee {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(216, 177, 129, 0.38);
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .marquee-item {
+    font-size: clamp(3.4rem, 18vw, 5.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .marquee-track {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+}
