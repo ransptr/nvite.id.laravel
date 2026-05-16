@@ -26,7 +26,12 @@ class InvitationController extends Controller
 
     public function store(StoreInvitationRequest $request): JsonResponse
     {
-        $profile = Profile::query()->find($request->user()->id);
+        $profile = Profile::query()->firstOrCreate([
+            'id' => $request->user()->id,
+        ], [
+            'plan' => 'free',
+        ]);
+
         $plan = $profile?->plan ?? 'free';
         $limits = ['free' => 1, 'basic' => 3, 'pro' => PHP_INT_MAX];
         $currentCount = Invitation::query()->where('owner_id', $request->user()->id)->count();
@@ -64,6 +69,17 @@ class InvitationController extends Controller
         $invitation->delete();
 
         return response()->json(['ok' => true]);
+    }
+
+    public function checkSlug(Request $request): JsonResponse
+    {
+        $slug = $request->query('slug');
+        $exclude = $request->query('exclude');
+        $query = Invitation::query()->where('slug', $slug);
+        if ($exclude) {
+            $query->where('id', '!=', $exclude);
+        }
+        return response()->json(['taken' => $query->exists()]);
     }
 
     public function publicBySlug(string $slug): JsonResponse

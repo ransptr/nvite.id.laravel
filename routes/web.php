@@ -22,19 +22,27 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/claire', function () {
+    return redirect('/templates/lumiere');
+});
+
+Route::get('/templates/{templateSlug}', function (string $templateSlug) {
+    return Inertia::render('TemplatePreview', ['templateSlug' => $templateSlug]);
+})->name('templates.preview');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/api/profile', [ProfileController::class, 'showApi'])->name('profile.show.api');
+    Route::patch('/api/profile', [ProfileController::class, 'updateApi'])->name('profile.update.api');
+
     Route::get('/api/invitations', [InvitationController::class, 'index'])->name('invitations.index');
     Route::post('/api/invitations', [InvitationController::class, 'store'])->name('invitations.store');
     Route::patch('/api/invitations/{invitation}', [InvitationController::class, 'update'])->name('invitations.update');
     Route::delete('/api/invitations/{invitation}', [InvitationController::class, 'destroy'])->name('invitations.destroy');
+    Route::get('/api/invitations/check-slug', [InvitationController::class, 'checkSlug'])->name('invitations.check.slug');
 
     Route::get('/api/invitations/{invitation}/rsvps', [RsvpController::class, 'index'])->name('rsvps.index');
     Route::get('/api/invitations/{invitation}/rsvps/summary', [RsvpController::class, 'summary'])->name('rsvps.summary');
@@ -54,8 +62,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/invitations/{invitation}/guests', [GuestManagerController::class, 'show'])->name('guest.manager');
 });
 
-Route::get('/i/{slug}', [InvitationController::class, 'publicBySlug'])->name('invitations.public.show');
+Route::get('/i/{slug}/data', [InvitationController::class, 'publicBySlug'])->name('invitations.public.show');
+Route::get('/i/{slug}/rsvps', [RsvpController::class, 'publicIndex'])->name('rsvps.public.index');
 Route::post('/i/{slug}/rsvp', [RsvpController::class, 'storePublic'])->name('rsvps.public.store');
+Route::get('/api/guests/resolve', [GuestController::class, 'resolve'])->name('guests.resolve');
 Route::get('/api/share-meta', ShareMetaController::class)->name('share.meta');
+
+Route::get('/dashboard/{any?}', function () {
+    return Inertia::render('DashboardApp');
+})->middleware(['auth', 'verified'])->where('any', '.*')->name('dashboard');
+
+Route::get('/{slug}', function (string $slug) {
+    return Inertia::render('PublicInvitation', ['slug' => $slug]);
+})->where('slug', '^(?!login$|register$|forgot-password$|reset-password$|verify-email$|confirm-password$|email$|profile$|dashboard$|templates$|api$|storage$|up$|sanctum$)[A-Za-z0-9-]+$')->name('invitations.public.page');
 
 require __DIR__.'/auth.php';

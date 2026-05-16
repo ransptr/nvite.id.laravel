@@ -12,6 +12,16 @@ use Rap2hpoutre\FastExcel\FastExcel;
 
 class GuestController extends Controller
 {
+    public function resolve(Request $request): JsonResponse
+    {
+        $key = $request->query('key');
+        if (!$key) {
+            return response()->json(['name' => null]);
+        }
+        $guest = Guest::query()->where('guest_key', $key)->first();
+        return response()->json(['name' => $guest?->name]);
+    }
+
     public function index(Request $request, Invitation $invitation): JsonResponse
     {
         $this->authorize('view', $invitation);

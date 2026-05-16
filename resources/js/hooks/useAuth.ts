@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 
 export function useAuth() {
     const page = usePage();
@@ -8,4 +8,8 @@ export function useAuth() {
         user,
         loading: false,
     };
+}
+
+export function signOut() {
+    router.post('/logout');
 }

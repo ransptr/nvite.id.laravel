@@ -19,6 +19,13 @@ class RsvpController extends Controller
         return response()->json($items);
     }
 
+    public function publicIndex(Request $request, string $slug): JsonResponse
+    {
+        $invitation = Invitation::query()->where('slug', $slug)->where('is_published', true)->firstOrFail();
+        $items = $invitation->rsvps()->latest()->get();
+        return response()->json($items);
+    }
+
     public function storePublic(StoreRsvpRequest $request, string $slug): JsonResponse
     {
         $invitation = Invitation::query()->where('slug', $slug)->where('is_published', true)->firstOrFail();

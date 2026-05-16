@@ -24,6 +24,31 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function showApi(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $profile = \App\Models\Profile::query()->firstOrCreate([
+            'id' => $request->user()->id,
+        ], [
+            'plan' => 'free',
+        ]);
+
+        return response()->json([
+            'plan' => $profile?->plan ?? 'free',
+        ]);
+    }
+
+    public function updateApi(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $profile = \App\Models\Profile::query()->firstOrCreate([
+            'id' => $request->user()->id,
+        ], [
+            'plan' => 'free',
+        ]);
+
+        $profile->update($request->only(['plan']));
+        return response()->json(['ok' => true]);
+    }
+
     /**
      * Update the user's profile information.
      */
