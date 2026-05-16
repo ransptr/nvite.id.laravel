@@ -22,8 +22,16 @@ class UploadMediaRequest extends FormRequest
      */
     public function rules(): array
     {
+        $kind = $this->input('kind', 'other');
+
+        $maxByKind = match ($kind) {
+            'image' => 2048,
+            'video' => 20480,
+            default => 30720,
+        };
+
         return [
-            'file' => ['required', 'file', 'max:30720'],
+            'file' => ['required', 'file', 'max:'.$maxByKind],
             'kind' => ['nullable', 'in:image,video,audio,other'],
             'invitation_id' => ['nullable', 'string'],
             'path_prefix' => ['nullable', 'string', 'max:200'],

@@ -609,6 +609,23 @@ function MediaTab({ c, userId, invId, onChange }) {
 
       <Section title="Video & Background Music">
         <div className="space-y-6">
+          <Field label="Hero Video URL" hint="Use a direct MP4/WebM file URL or upload a video file below. YouTube is not supported here.">
+            {m.heroVideo ? (
+              <div className="flex items-center gap-2 rounded-xl border border-[#c9974a]/30 bg-[#c9974a]/10 px-4 py-2.5">
+                <span className="text-sm font-medium text-[#c9974a]">✓ Video uploaded</span>
+                <button type="button" onClick={() => setMedia('heroVideo', '')} className="ml-auto text-xs text-[#8a7a6e] hover:text-[#c9974a]">Remove</button>
+              </div>
+            ) : (
+              <TextInput value={m.heroVideo} onChange={(v) => setMedia('heroVideo', v)} placeholder="https://..." />
+            )}
+          </Field>
+          <PhotoUpload
+            currentUrl={m.heroVideo}
+            onUploaded={(url) => setMedia('heroVideo', url)}
+            label="Upload hero video"
+            accept="video/*"
+            kind="video"
+          />
           <Field label="Film Video URL" hint="For the Play Film modal. Supports YouTube watch, youtu.be, shorts, live, and embed links.">
             <TextInput value={m.videoUrl} onChange={(v) => setMedia('videoUrl', v)} placeholder="https://www.youtube.com/watch?v=..." />
           </Field>
@@ -618,7 +635,14 @@ function MediaTab({ c, userId, invId, onChange }) {
             label="Upload film poster"
           />
           <Field label="Background Audio URL" hint="Use a direct MP3/M4A/WAV file URL or upload audio below.">
-            <TextInput value={m.audio} onChange={(v) => setMedia('audio', v)} placeholder="https://..." />
+            {m.audio ? (
+              <div className="flex items-center gap-2 rounded-xl border border-[#c9974a]/30 bg-[#c9974a]/10 px-4 py-2.5">
+                <span className="text-sm font-medium text-[#c9974a]">✓ Audio uploaded</span>
+                <button type="button" onClick={() => setMedia('audio', '')} className="ml-auto text-xs text-[#8a7a6e] hover:text-[#c9974a]">Remove</button>
+              </div>
+            ) : (
+              <TextInput value={m.audio} onChange={(v) => setMedia('audio', v)} placeholder="https://..." />
+            )}
           </Field>
           <PhotoUpload
             currentUrl={m.audio}

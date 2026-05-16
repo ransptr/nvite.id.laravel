@@ -64,6 +64,7 @@ export function PhotoUpload({
 
     const formData = new FormData();
     formData.append('file', uploadFile);
+    formData.append('kind', kind);
 
     try {
       const response = await fetch('/api/media/upload', {
